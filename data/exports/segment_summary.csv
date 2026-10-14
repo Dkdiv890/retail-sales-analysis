@@ -1,0 +1,4 @@
+Segment,Transaction_Count,Total_Sales,Total_Profit,Avg_Transaction_Sales,Profit_Margin_Pct
+Consumer,5183,1160832.77,134007.44,223.97,11.54
+Corporate,3015,706070.13,91954.98,234.19,13.02
+Home Office,1779,429292.68,60279.0,241.31,14.04

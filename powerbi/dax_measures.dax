@@ -1,0 +1,109 @@
+// ==============================================================================
+// powerbi/dax_measures.dax
+// Production-Ready DAX Measures for Retail Sales Analysis Dashboard
+// Target Table: Superstore_Cleaned
+// All calculations are mathematically reconciled against SQL & Python outputs.
+// ==============================================================================
+
+// ------------------------------------------------------------------------------
+// 1. PRIMARY EXECUTIVE KPIS
+// ------------------------------------------------------------------------------
+
+// Total Sales across all transactions
+Total Sales = 
+SUM(Superstore_Cleaned[Sales])
+
+// Total Net Profit across all transactions
+Total Profit = 
+SUM(Superstore_Cleaned[Profit])
+
+// Total Units Sold
+Total Quantity = 
+SUM(Superstore_Cleaned[Quantity])
+
+// Total Transaction Rows (Explicitly labeled as transactions, NOT orders)
+Total Transactions = 
+COUNTROWS(Superstore_Cleaned)
+
+// Overall Profit Margin Percentage (Safe divide handling zero or missing sales)
+Profit Margin % = 
+DIVIDE(
+    [Total Profit], 
+    [Total Sales], 
+    0
+)
+
+// Average Sales generated per transaction row
+Avg Sales Per Transaction = 
+DIVIDE(
+    [Total Sales], 
+    [Total Transactions], 
+    0
+)
+
+// Average Profit generated per transaction row
+Avg Profit Per Transaction = 
+DIVIDE(
+    [Total Profit], 
+    [Total Transactions], 
+    0
+)
+
+// Average Discount Rate applied
+Avg Discount Rate = 
+AVERAGE(Superstore_Cleaned[Discount])
+
+
+// ------------------------------------------------------------------------------
+// 2. LOSS-MAKING TRANSACTIONS & MARGIN LEAKAGE MEASURES
+// ------------------------------------------------------------------------------
+
+// Count of transactions that resulted in a negative profit
+Loss-Making Transactions = 
+CALCULATE(
+    COUNTROWS(Superstore_Cleaned),
+    Superstore_Cleaned[Profit] < 0
+)
+
+// Percentage share of total transactions that incurred a loss
+Loss Transaction Share % = 
+DIVIDE(
+    [Loss-Making Transactions], 
+    [Total Transactions], 
+    0
+)
+
+// Cumulative dollar loss incurred from unprofitable transactions
+Total Loss Incurred = 
+CALCULATE(
+    SUM(Superstore_Cleaned[Profit]),
+    Superstore_Cleaned[Profit] < 0
+)
+
+// Average discount rate given specifically on loss-making transactions
+Avg Discount on Losses = 
+CALCULATE(
+    AVERAGE(Superstore_Cleaned[Discount]),
+    Superstore_Cleaned[Profit] < 0
+)
+
+
+// ------------------------------------------------------------------------------
+// 3. CONDITIONAL FORMATTING & DYNAMIC COLOR MEASURES
+// ------------------------------------------------------------------------------
+
+// Color code for profit margin cards and charts: Green for positive, Red for negative
+Profit Margin Color = 
+IF(
+    [Profit Margin %] >= 0.15, "#2ca02c", // Healthy (>15% green)
+    IF([Profit Margin %] >= 0, "#ff7f0e", // Marginal (0-15% orange)
+    "#d62728")                           // Loss (<0% red)
+)
+
+// Sub-Category Profit Bar Color (Differentiates positive vs negative bars in charts)
+SubCategory Profit Color = 
+IF(
+    [Total Profit] >= 0, 
+    "#1f77b4", // Blue for profit
+    "#d62728"  // Red for net loss
+)

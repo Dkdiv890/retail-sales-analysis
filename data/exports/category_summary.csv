@@ -1,0 +1,4 @@
+Category,Transaction_Count,Total_Sales,Total_Profit,Total_Quantity,Avg_Discount,Profit_Margin_Pct
+Furniture,2118,741306.31,18421.81,8020,0.17402738432483475,2.49
+Office Supplies,6012,718735.24,122364.66,22861,0.15738522954091816,17.02
+Technology,1847,836154.03,145454.95,6939,0.1323226854358419,17.4

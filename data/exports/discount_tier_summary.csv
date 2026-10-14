@@ -1,0 +1,5 @@
+Discount_Tier,Transaction_Count,Total_Sales,Total_Profit,Avg_Profit_Per_Transaction,Profit_Margin_Pct
+0% (No Discount),4787,1087277.56,320844.41,67.02,29.51
+1-20% (Low),3799,846432.82,100754.78,26.52,11.9
+21-50% (Moderate),536,298260.04,-58804.95,-109.71,-19.72
+>50% (High),855,64225.17,-76552.81,-89.54,-119.19
