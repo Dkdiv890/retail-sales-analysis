@@ -73,7 +73,22 @@ EDA final/
 
 ---
 
-## 4. Key Business Findings (Empirically Derived)
+## 4. Duplicate Records Investigation & Data Cleaning Audit
+
+Before proceeding with downstream analysis, an in-depth audit of duplicate records was conducted across all 13 columns:
+- **Raw Preservation:** 9,994 raw rows preserved unchanged in `data/raw/SampleSuperstore.csv`.
+- **Duplicates Identified:** Exactly 17 duplicate rows (34 total rows involved in identical pairs matching 100% across all attributes).
+- **Analytical Limitations:** In the absence of an `Order ID` or timestamp, genuine repeated transactions cannot be ruled out conclusively. Removing all 17 exact duplicate rows is not presented as definitively correct or universally industry-standard. However, consecutive identical entries (e.g., identical custom-discounted chairs in Columbus, Ohio) suggest system logging duplication.
+- **Deduplication Impact:**
+  - **Sales:** $2,297,200.86 -> $2,296,195.59 (-$1,005.27 | -0.0438%)
+  - **Profit:** $286,397.02 -> $286,241.42 (-$155.60 | -0.0543%)
+  - **Quantity:** 37,873 -> 37,820 units (-53 units | -0.1399%)
+  - **Profit Margin:** 12.4672% -> 12.4659% (delta of -0.0013 percentage points)
+- **Analytical Decision & Documented Uncertainty:** In the absence of primary keys or timestamps, removing these 17 rows is an explicit analytical modeling assumption rather than an absolute fact or universal standard. It serves as a conservative safeguard against system double-counting while adjusting revenue by only 0.044% and preserving the raw dataset intact (detailed audit log and sensitivity analysis in `reports/data_cleaning_report.md`).
+
+---
+
+## 5. Key Business Findings (Empirically Derived)
 
 Across **9,977 cleaned transaction rows**, the business generated **$2,296,195.59 in sales** and **$286,241.42 in profit** (**12.47% overall profit margin**), with an average transaction value of **$230.15**.
 
@@ -85,7 +100,7 @@ Across **9,977 cleaned transaction rows**, the business generated **$2,296,195.5
 
 ---
 
-## 5. SQL Concepts Demonstrated
+## 6. SQL Concepts Demonstrated
 
 The 14 executable queries in `sql/analysis_queries.sql` cover:
 - **Core Aggregations:** `COUNT(*)`, `SUM()`, `AVG()`, `ROUND()`, `MIN()`, `MAX()`
@@ -102,7 +117,7 @@ All query outputs are logged with tabular results in `sql/query_results.md`.
 
 ---
 
-## 6. Mathematical Cross-Validation
+## 7. Mathematical Cross-Validation
 
 Every primary metric was cross-validated between Python (Pandas) and SQL (SQLite 3):
 - **Total Transaction Rows:** Python `9,977` | SQL `9,977` | **100% Match**
@@ -112,7 +127,7 @@ Every primary metric was cross-validated between Python (Pandas) and SQL (SQLite
 
 ---
 
-## 7. How to Reproduce & Run the Project
+## 8. How to Reproduce & Run the Project
 
 ### Prerequisites:
 - Python 3.9+ with `pandas`, `numpy`, `matplotlib`, `seaborn`, `jupyter`
@@ -130,22 +145,22 @@ pip install -r requirements.txt
 # 3. Run data cleaning pipeline (audits duplicates, cleans types, outputs report)
 python3 src/data_cleaning.py
 
-# 3. Initialize SQLite database and load cleaned data
+# 4. Initialize SQLite database and load cleaned data
 python3 src/database_setup.py
 
-# 4. Execute all 14 SQL analytical queries and log results
+# 5. Execute all 14 SQL analytical queries and log results
 python3 src/run_sql_queries.py
 
-# 5. Generate publication-quality EDA charts and Excel summary CSVs
+# 6. Generate publication-quality EDA charts and Excel summary CSVs
 python3 src/eda_analysis.py
 
-# 6. Launch the interactive Jupyter Notebook
+# 7. Launch the interactive Jupyter Notebook
 jupyter notebook notebooks/retail_sales_analysis.ipynb
 ```
 
 ---
 
-## 8. Power BI Dashboard Deliverables Notice
+## 9. Power BI Dashboard Deliverables Notice
 
 Power BI Desktop is a Windows-native application. To ensure full reproducibility in non-Windows or headless environments, this repository provides:
 - Cleaned dataset: `data/cleaned/Superstore_Cleaned.csv`
